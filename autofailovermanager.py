@@ -27,7 +27,7 @@ private_key_ret: PrivateKey = PrivateKey.new_ed25519(private_key_bytes_ret)
 
 public_key: PublicKey = private_key_ret.public_key()
 
-account: Address = derive_virtual_account_address_from_public_key(
+account: Address = Address.preallocated_account_address_from_public_key(
         public_key, network_id
     )
 #print(f"Babylon Address where Owner Badge is Located: {account.as_str()}")
@@ -63,8 +63,8 @@ xrd_address: Address = address_book.resource_addresses.xrd
 owner_badge: str = ("resource_rdx1nggtpr03hdw247v9cve0xcd09cpr9tkxzc0w3dv8s9l8uzcln4ha7e")
 
 print('\n')
-manifest: TransactionManifest = (
-        ManifestBuilder()
+manifest: TransactionManifestV1 = (
+        ManifestV1Builder()
         .call_method(
             ManifestBuilderAddress.STATIC(Address(SOURCE_ACCOUNT)),
             "lock_fee",
@@ -109,7 +109,7 @@ manifest: TransactionManifest = (
 #print(manifest.instructions().as_str())
 logging.info('Update Key Manifest: %s', manifest.instructions().as_str())
 
-manifest.statically_validate()
+manifest.statically_validate(network_id)
 
 urlint = "https://mainnet.radixdlt.com/statistics/validators/uptime"
 
